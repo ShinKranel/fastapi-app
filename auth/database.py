@@ -3,10 +3,11 @@ from typing import AsyncGenerator, TYPE_CHECKING
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTable, SQLAlchemyUserDatabase
 from fastapi_users.models import ID
-from sqlalchemy import String, Boolean
+from sqlalchemy import String, Boolean, TIMESTAMP, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
+from app.models.models import role
 from config import DB_NAME, DB_PORT, DB_HOST, DB_USER, DB_PASS
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -23,8 +24,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         id: ID
         email: str
         username: str
-        role_id: str
-        registered_at: str
+        role_id: ForeignKey(role.c.id)
+        registered_at: TIMESTAMP
         hashed_password: str
         is_active: bool
         is_superuser: bool
@@ -36,11 +37,11 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         username: Mapped[str] = mapped_column(
             String(length=320), nullable=False
         )
-        role_id: Mapped[str] = mapped_column(
-            String(length=320), nullable=False
+        role_id: Mapped[ForeignKey(role.c.id)] = mapped_column(
+            ForeignKey(role.c.id), nullable=False
         )
-        registered_at: Mapped[str] = mapped_column(
-            String(length=1024), nullable=False
+        registered_at: Mapped[TIMESTAMP] = mapped_column(
+            TIMESTAMP, nullable=False
         )
         hashed_password: Mapped[str] = mapped_column(
             String(length=1024), nullable=False
@@ -56,11 +57,6 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
 engine = create_async_engine(DATABASE_URL)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
-
-
-async def create_db_and_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

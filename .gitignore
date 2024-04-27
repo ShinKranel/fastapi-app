@@ -1,0 +1,8 @@
+.env
+.idea
+venv
+*.log
+*~
+*.iml
+._*
+atlassian-ide-plugin.xml

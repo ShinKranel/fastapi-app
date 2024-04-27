@@ -1,14 +1,9 @@
 import uvicorn
-from fastapi import FastAPI
-from app.routes import trades, users
+from fastapi import FastAPI, Depends
 
 app = FastAPI(
     title="Trading App"
 )
-
-
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(trades.router, prefix="/trades", tags=["trades"])
 
 
 if __name__ == "__main__":
