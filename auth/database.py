@@ -3,7 +3,7 @@ from typing import AsyncGenerator, TYPE_CHECKING
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyBaseUserTable, SQLAlchemyUserDatabase
 from fastapi_users.models import ID
-from sqlalchemy import String, Boolean, TIMESTAMP, ForeignKey
+from sqlalchemy import String, Boolean, TIMESTAMP, ForeignKey, Integer
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -31,6 +31,9 @@ class User(SQLAlchemyBaseUserTable[int], Base):
         is_superuser: bool
         is_verified: bool
     else:
+        id: Mapped[int] = mapped_column(
+            Integer, unique=True, index=True, nullable=False, primary_key=True
+        )
         email: Mapped[str] = mapped_column(
             String(length=320), unique=True, index=True, nullable=False
         )
