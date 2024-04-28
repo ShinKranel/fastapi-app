@@ -21,7 +21,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     __tablename__ = "user"
 
     if TYPE_CHECKING:  # pragma: no cover
-        id: ID
+        id: int
         email: str
         username: str
         role_id: ForeignKey(role.c.id)
