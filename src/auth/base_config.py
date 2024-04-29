@@ -1,6 +1,6 @@
 from fastapi_users.authentication import CookieTransport, JWTStrategy, AuthenticationBackend
 
-from config import SECRET_AUTH
+from src.config import SECRET_AUTH
 
 cookie_transport = CookieTransport(
     cookie_name="bonds",

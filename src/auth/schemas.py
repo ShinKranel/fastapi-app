@@ -1,9 +1,8 @@
 from fastapi_users import schemas, FastAPIUsers
-from pydantic import EmailStr
 
-from auth.auth import auth_backend
-from auth.database import User
-from auth.manager import get_user_manager
+from src.auth.base_config import auth_backend
+from src.auth.models import User
+from src.auth.manager import get_user_manager
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
